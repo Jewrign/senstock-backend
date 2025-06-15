@@ -1,18 +1,28 @@
 services:
   - type: web
     name: senstock-backend
-    env: php
+    env: docker
     plan: free
-    buildCommand: |
-      composer install --no-dev --optimize-autoloader
-      php artisan config:cache
-      php artisan migrate --force
-    startCommand: php artisan serve --host 0.0.0.0 --port $PORT
+    branch: main
+    dockerfilePath: Dockerfile
+    buildCommand: ""
+    startCommand: apache2-foreground
     envVars:
       - key: APP_ENV
         value: production
-      - key: APP_DEBUG
-        value: false
       - key: APP_KEY
         generateValue: true
-      - fromGroup: senstock-db-creds
+      - key: APP_DEBUG
+        value: false
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DB_HOST
+        value: dpg-d17eu8emcj7s73d4o5og-a.render.com
+      - key: DB_PORT
+        value: 5432
+      - key: DB_DATABASE
+        value: senstock_db_sumr
+      - key: DB_USERNAME
+        value: senstock_db_sumr_user
+      - key: DB_PASSWORD
+        value: 0BZF8YseKGiUPxAGR9YEgaZekENdFGWO

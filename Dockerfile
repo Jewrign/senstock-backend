@@ -3,7 +3,14 @@ FROM php:8.2-apache
 # Installer extensions nécessaires dont pdo_pgsql
 RUN apt-get update && apt-get install -y \
     zip unzip git curl libpq-dev libonig-dev libxml2-dev \
-    && docker-php-ext-install pdo pdo_pgsql
+    && docker-php-ext-install pdo pdo_pgsql pdo_mysql opcache \
+    && docker-php-ext-configure pgsql --with-pgsql=/usr/local/pgsql \
+    && docker-php-ext-install pdo_pgsql \
+    && docker-php-ext-enable pdo_pgsql
+
+# Installer les extensions PHP nécessaires
+RUN pecl install pdo_pgsql \
+    && docker-php-ext-enable pdo_pgsql
 
 # Installer Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer

@@ -1,6 +1,6 @@
 FROM php:8.2-apache
 
-# Installer les extensions nécessaires
+# Installer extensions nécessaires dont pdo_pgsql
 RUN apt-get update && apt-get install -y \
     zip unzip git curl libpq-dev libonig-dev libxml2-dev \
     && docker-php-ext-install pdo pdo_pgsql
@@ -11,17 +11,17 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 # Définir le répertoire de travail
 WORKDIR /var/www/html
 
-# Copier les fichiers Laravel dans le conteneur
+# Copier les fichiers Laravel
 COPY . .
 
-# Donner les permissions
+# Permissions
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html
 
-# Installer les dépendances Laravel
+# Installer dépendances Laravel
 RUN composer install --no-dev --optimize-autoloader
 
-# Activer mod_rewrite pour Laravel
+# Activer mod_rewrite Apache
 RUN a2enmod rewrite
 
 # Configurer Apache

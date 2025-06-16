@@ -8,6 +8,8 @@ services:
     buildCommand: ""
     startCommand: apache2-foreground
     envVars:
+      -key: PHP_EXTENSIONS
+        value: "pdo_pgsql"
       - key: APP_ENV
         value: production
       - key: APP_KEY

@@ -1,12 +1,17 @@
 #!/bin/bash
 
-# Attendre que PostgreSQL soit prêt
-echo "⏳ Attente de la base de données..."
+echo "⏳ Attente de la base PostgreSQL..."
+
+# Essayer de lancer les migrations tant que la DB n'est pas prête
 until php artisan migrate --force; do
-  echo "🔁 Nouvelle tentative dans 5s..."
+  echo "🔁 Nouvelle tentative de migration dans 5 secondes..."
   sleep 5
 done
 
-# Lancer Apache (ce que Render attend)
-echo "✅ Migrations terminées. Démarrage du serveur Apache..."
+# Créer le lien symbolique vers /storage (public)
+echo "🔗 Création du lien vers public/storage..."
+php artisan storage:link
+
+# Démarrer Apache
+echo "🚀 Lancement du serveur Apache..."
 apache2-foreground

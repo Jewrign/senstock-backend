@@ -6,7 +6,7 @@ services:
     branch: main
     dockerfilePath: Dockerfile
     buildCommand: ""
-    startCommand: apache2-foreground
+    startCommand: /entrypoint.sh
     envVars:
       - key: APP_ENV
         value: production

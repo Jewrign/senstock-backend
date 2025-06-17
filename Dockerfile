@@ -1,6 +1,6 @@
 FROM php:8.2-apache
 
-# Installer extensions nécessaires (dont pdo_pgsql pour PostgreSQL)
+# Installer les extensions nécessaires
 RUN apt-get update && apt-get install -y \
     zip unzip git curl libpq-dev libonig-dev libxml2-dev \
     && docker-php-ext-install pdo pdo_pgsql
@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y \
 # Installer Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Définir répertoire de travail
+# Définir le répertoire de travail
 WORKDIR /var/www/html
 
 # Copier tout le projet Laravel
@@ -21,19 +21,20 @@ RUN chown -R www-data:www-data /var/www/html \
 # Installer les dépendances Laravel
 RUN composer install --no-dev --optimize-autoloader
 
-# Générer la clé de l'application si non présente
-RUN if [ ! -f .env ]; then cp .env.example .env; fi \
-    && php artisan key:generate \
-    && php artisan config:cache \
-    && php artisan config:cache \
-    && php artisan migrate --force
+# Nettoyer et regénérer les caches Laravel
+RUN php artisan config:clear \
+ && php artisan route:clear \
+ && php artisan view:clear \
+ && php artisan config:cache
 
+# Lancer les migrations (automatique au build)
+RUN php artisan migrate --force || true
 
 # Activer mod_rewrite
 RUN a2enmod rewrite
 
-# Configurer Apache
+# Configurer Apache pour pointer vers /public
 COPY ./docker/apache.conf /etc/apache2/sites-available/000-default.conf
 
-# Spécifier le répertoire public
+# Définir le répertoire public comme racine
 ENV APACHE_DOCUMENT_ROOT /var/www/html/public

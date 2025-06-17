@@ -10,6 +10,10 @@ use App\Http\Controllers\MouvementController;
 Route::apiResource('produits', ProduitController::class);
 Route::post('produits/{id}/mouvements', [MouvementController::class, 'store']);
 Route::get('produits/{id}/mouvements', [MouvementController::class, 'index']);
+Route::post('/test-post', function () {
+    return response()->json(['status' => 'POST ok']);
+});
+
 // Route::post('/register', [AuthController::class, 'register']);
 // Route::post('/login', [AuthController::class, 'login']);
 

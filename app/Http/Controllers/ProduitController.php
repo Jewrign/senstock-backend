@@ -27,7 +27,13 @@ class ProduitController extends Controller
             'stock' => 'required|integer',
             'prix_unitaire' => 'required|numeric',
             'seuil_alerte' => 'required|integer',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
+
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('produits', 'public');
+            $validated['image'] = $imagePath;
+        }
 
         $produit = Produit::create($validated);
         return response()->json($produit, 201);
@@ -56,7 +62,13 @@ class ProduitController extends Controller
             'stock' => 'sometimes|required|integer',
             'prix_unitaire' => 'sometimes|required|numeric',
             'seuil_alerte' => 'sometimes|required|integer',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
+
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('produits', 'public');
+            $validated['image'] = $imagePath;
+        }
 
         $produit->update($validated);
         return response()->json($produit);

@@ -17,7 +17,7 @@ services:
       - key: DB_CONNECTION
         value: pgsql
       - key: DB_HOST
-        value: dpg-d17eu8emcj7s73d4o5og-a.render.com
+        value: dpg-d17eu8emcj7s73d4o5og-a
       - key: DB_PORT
         value: 5432
       - key: DB_DATABASE
@@ -26,3 +26,5 @@ services:
         value: senstock_db_sumr_user
       - key: DB_PASSWORD
         value: 0BZF8YseKGiUPxAGR9YEgaZekENdFGWO
+      - key: SESSION_DRIVER
+        value: file

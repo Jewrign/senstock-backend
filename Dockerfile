@@ -1,47 +1,47 @@
-# Image officielle PHP avec Apache
+# Image de base PHP avec Apache
 FROM php:8.2-apache
 
-# Installer les extensions nécessaires (dont pdo_pgsql)
+# Installer les extensions nécessaires (incluant PostgreSQL)
 RUN apt-get update && apt-get install -y \
     zip unzip git curl libpq-dev libonig-dev libxml2-dev \
     && docker-php-ext-install pdo pdo_pgsql
 
-# Vérification : PDO_PGSQL doit être actif
-RUN php -m | grep -i pdo_pgsql || (echo "❌ ERREUR : pdo_pgsql non installé !" && exit 1)
+# Vérification de l'installation de pdo_pgsql
+RUN php -m | grep -i pdo_pgsql || (echo "❌ pdo_pgsql non installé !" && exit 1)
 
 # Installer Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Définir le répertoire de travail
+# Définir le dossier de travail
 WORKDIR /var/www/html
 
-# Copier tous les fichiers du projet Laravel
+# Copier les fichiers du projet Laravel
 COPY . .
 
-# Donner les bonnes permissions
+# Permissions correctes
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html
 
-# Copier .env.example si .env absent (sécurité Render)
+# Copier .env.example s'il n'y a pas encore de .env
 RUN if [ ! -f .env ]; then cp .env.example .env; fi
 
 # Installer les dépendances Laravel
 RUN composer install --no-dev --optimize-autoloader
 
-# Nettoyer et regénérer les caches Laravel
-RUN php artisan config:clear \
- && php artisan route:clear \
- && php artisan view:clear \
- && php artisan config:cache
+# Supprimer tous les caches Laravel (PAS de config:cache ici)
+RUN rm -rf bootstrap/cache/*.php \
+    && php artisan config:clear \
+    && php artisan route:clear \
+    && php artisan view:clear
 
-# Lancer automatiquement les migrations (évite 500 erreur de tables manquantes)
+# Lancer automatiquement les migrations à chaque build (ignorer erreur si déjà migré)
 RUN php artisan migrate --force || true
 
-# Activer le module mod_rewrite pour Laravel
+# Activer mod_rewrite pour Laravel
 RUN a2enmod rewrite
 
-# Remplacer la config Apache par la tienne
+# Utiliser notre config Apache
 COPY ./docker/apache.conf /etc/apache2/sites-available/000-default.conf
 
-# Définir /public comme racine du serveur
+# Définir le dossier public comme racine du serveur
 ENV APACHE_DOCUMENT_ROOT /var/www/html/public

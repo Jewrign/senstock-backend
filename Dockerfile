@@ -25,7 +25,9 @@ RUN composer install --no-dev --optimize-autoloader
 RUN if [ ! -f .env ]; then cp .env.example .env; fi \
     && php artisan key:generate \
     && php artisan config:cache \
+    && php artisan config:cache \
     && php artisan migrate --force
+
 
 # Activer mod_rewrite
 RUN a2enmod rewrite

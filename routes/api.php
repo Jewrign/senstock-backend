@@ -6,9 +6,7 @@ use App\Http\Controllers\MouvementController;
 // use App\Http\Controllers\AuthController;
 
 
-Route::get('/', function () {
-    return response()->json(['status' => 'Laravel is working!']);
-});
+
 Route::apiResource('produits', ProduitController::class);
 Route::post('produits/{id}/mouvements', [MouvementController::class, 'store']);
 Route::get('produits/{id}/mouvements', [MouvementController::class, 'index']);

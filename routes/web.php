@@ -2,8 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 
-
 Route::get('/', function () {
-    return response()->json(['status' => 'Laravel is working!']);
+    return response()->json(['message' => 'SenStock Laravel API']);
 });
-

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('categorie');
             $table->text('description')->nullable();
             $table->integer('stock')->default(0);
-            $table->float('prix_unitaire');
+            $table->decimal('prix_unitaire', 10, 2);
             $table->integer('seuil_alerte')->default(5);
             $table->timestamps();
         });

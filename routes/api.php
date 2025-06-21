@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProduitController;
 use App\Http\Controllers\MouvementController;
-// use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AuthController;
 
 
 
@@ -14,10 +14,6 @@ Route::post('/test-post', function () {
     return response()->json(['status' => 'POST ok']);
 });
 
-// Route::post('/register', [AuthController::class, 'register']);
-// Route::post('/login', [AuthController::class, 'login']);
-
-// Route::middleware('auth:sanctum')->group(function () {
-//     Route::post('/logout', [AuthController::class, 'logout']);
-//     Route::get('/user', fn () => auth()->user());
-// });
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/logout', [AuthController::class, 'logout']);

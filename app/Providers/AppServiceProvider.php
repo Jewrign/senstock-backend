@@ -14,7 +14,7 @@ class AppServiceProvider extends ServiceProvider
     {
         //
     }
-
+    public const HOME = '/';
     /**
      * Bootstrap any application services.
      */

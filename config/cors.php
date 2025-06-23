@@ -19,7 +19,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['https://senstock-frontend.onrender.com'],
+    'allowed_origins' => ['https://senstock-frontend.onrender.com/api'],
 
     'allowed_origins_patterns' => [],
 

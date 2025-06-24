@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProduitController;
 use App\Http\Controllers\MouvementController;
 use App\Http\Controllers\AuthController;
+use Illuminate\Http\Request;
 
 
 
@@ -19,4 +20,6 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout']);
 
 // Route protégée pour récupérer les informations de l'utilisateur
-Route::middleware('auth:sanctum')->get('/user', [AuthController::class, 'user']);
+Route::get('/user', function (Request $request) {
+    return $request->user();
+})->middleware('auth:sanctum');
